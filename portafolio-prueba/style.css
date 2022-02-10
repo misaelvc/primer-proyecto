@@ -1,0 +1,908 @@
+/* DRY - Don't Repeat Yourself */
+
+/* El proyecto se empezó trabajando para un fomrato móvil. */
+
+/* Todo está ordenado de manera alfabética, por lo tanto, el proyecto se fue trabajando por partes, lo cual no significa que el orden en el que se encuentra la configuración es el orden en el que se trabajo. */
+
+/* SECCIONES DE TRABAJO */
+
+/******************* SECCIÓN - CUSTOM PROPERTIES ********************/
+
+/* Se definen las variables que se van a utilizar en el proyecto. */
+/* Con Root nos referimos al documento HTML, con esto nos aseguramos que todas las Costume Properties estén al alcance de todos los selectores del documento. */
+:root {
+  --first-color: #ada672;
+  --first-alpha-color: rgba(173, 166, 114, 0.75);
+  --second-color: #270d0d;
+  --second-alpha-color: rgba(37, 12, 11, 0.75);
+  --third-color: #715044;
+  --third-alpha-color: rgba(113, 80, 68, 0.75);
+  /* Estos colores se pueden cambiar, dependiendo de como se vean con los colores principales. */
+  --white-color: #fff;
+  --gray-color: #ccc;
+  --gray-light-color: #f3f3f3;
+  --gray-dark-color: #666;
+  --black-color: #333;
+  --link-color: #509ee3;
+  --title-color: #333;
+  --text-color: #222;
+  --white-alpha-color: rgba(255, 255, 255, 0.3);
+  --black-alpha-color: rgba(51, 51, 51, 0.75);
+  /* Fuente que se usa en la web. */
+  --font: "Raleway", sans-serif;
+  --max-width: 1200px;
+  --header-height: 4rem;
+}
+
+/******************** SECCIÓN - RESET ********************/
+
+/* Con los frameworks, cada vez que se diseña un componente a nivel de UI, se colocan los estilos de ese componente, de tal manera que si de un proyecto a otro se utiliza un mismo componente, lo que se puede y debe hacer para no trabajar doble es copiar y pegar de un proyecto a otro. El código CSS y el maquetado HTML. */
+html {
+  /* Hacemos que la caja inicie desde el borde y no desde el contenido como es por default. */
+  /* Este reseteo es muy común, se asegura que la altura de una caja va a ir desde el borde y no el contenido, ya que si se deja desde el contenido se corre peligro de que cuando se asignen paddings o borders los tamñaos no correspondan. */
+  box-sizing: border-box;
+  font-family: var(--font);
+  /* Se especifica el tamaño de letra a lo que equivale un rem, ya que al utilizar la variable quye se creó en root, este tomará la referencia del elemento HTML. */
+  font-size: 16px;
+  /* Para transición del scroll. */
+  scroll-behavior: smooth;
+}
+/* Con el selector universal, los elementos generado dinámicamente con after y before que hereden el tamaño de caja, en este caso, del nodo principal que es la etiqueta HTML.*/
+*,
+::after,
+::before {
+  box-sizing: inherit;
+}
+
+body {
+  /* Reseteamos el Body y le quitamos los márgenes que tenía por default. */
+  margin: 0;
+  /* Eliminamos la barra de desplazamiento en el eje x. */
+  overflow-x: hidden;
+  color: var(--text-color);
+}
+
+/* Para los enlaces. */
+a {
+  color: var(--link-color);
+  transition: all 0.5s ease-out;
+}
+
+a:hover {
+  opacity: 0.75;
+}
+
+/* Reseteo de los encabezados, el margen se reseta a 0, para después modificarlos a gusto. */
+h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+h5 {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+h6 {
+  margin: 0;
+  font-size: 0.7rem;
+}
+
+/* Para las imágenes cuando sean responsive. Con esta configuración la imagen se adapta al tamño del contenedor. */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Espaciado para párrafos, que en este caso es un interlineado relacionado con el tamñao de la letra que es de 16px. */
+p {
+  line-height: 1.6;
+}
+
+/******************** SECCIÓN - COMPONENTS ********************/
+
+/* Código ordenado de acuerdo a cada uno de los componentes del proyecto. */
+
+/********** Carousel  **********/
+/* Se realiza una animación para la transisción de las slides de manera automática. */
+@keyframes carousel-slide {
+  0% {
+    transform: translateX(0%);
+  }
+
+  25% {
+    transform: translateX(-25%);
+  }
+
+  50% {
+    transform: translateX(-50%);
+  }
+
+  75% {
+    transform: translateX(-75%);
+  }
+}
+
+.carousel {
+  margin: 2rem auto;
+  padding: 2rem 0;
+  max-width: 800px;
+  text-align: center;
+  overflow-x: hidden;
+  background-color: var(--carousel-bg-color);
+}
+
+.carousel .slides {
+  /* Con este Padding se logra centrar el contenido de las slides, esto porque las listas no se centran como los textos. */
+  padding-left: 0;
+  /* 100% por cada slide */
+  width: 400%;
+  display: flex;
+  list-style: none;
+  /* Esta transición es para poder mover las Slides. */
+  transition: transform 0.5s ease-in-out;
+  /* En esta parte del Carrusel se define la animación. No se deja que la animación sea infinita porque sino los botones de Checked no responderán.*/
+  /* Los tres segundos del final significan que habrá un delay previo a que inice la animación. */
+  animation: carousel-slide 12s ease-in-out 3s;
+}
+
+/* Para ocultar los check del Carrusel. */
+.carousel input {
+  display: none;
+}
+
+/* Para las etiquetas del Carrusel y que tengan características de bloque. */
+.carousel label {
+  border: medium solid var(--gray-dark-color);
+  border-radius: 50%;
+  margin: 0 0.25rem;
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  cursor: pointer;
+}
+
+/* Para mover las transiciones de las Slides. */
+/* El símbolo de la '~' significa, mueve al el hermano que tienes a lado. Por eso, los Inputs tienen que estar antes que la UL. */
+#slide-1:checked ~ .slides {
+  /* Los porcentajes son divididos entre el número de Slides. En este caso, mi factor sería de 25% porque son 4 Slides. */
+  transform: translateX(0%);
+}
+
+#slide-2:checked ~ .slides {
+  transform: translateX(-25%);
+}
+
+#slide-3:checked ~ .slides {
+  transform: translateX(-50%);
+}
+
+#slide-4:checked ~ .slides {
+  transform: translateX(-75%);
+}
+
+/* Esto es para que cuando se seleccione una de las Slides el Checked quede marcado. */
+#slide-1:checked ~ .slides-nav label#dot-1,
+#slide-2:checked ~ .slides-nav label#dot-2,
+#slide-3:checked ~ .slides-nav label#dot-3,
+#slide-4:checked ~ .slides-nav label#dot-4 {
+  background-color: var(--gray-dark-color);
+}
+
+/********** Contact Form **********/
+.contact-form {
+  margin: 2rem auto;
+  padding: 1rem;
+  max-width: 800px;
+}
+
+/* Todos los elementos que son hijos directos, sin importar que tipo de etiqueta o selector es, se les aplicará lo siguiente (al parecer esto se aplica así porque se está usando el Selector Universal): */
+.contact-form > * {
+  /* Con esto aumenta el espacio en los Placeholder (los textos que se ven dentro de los input y textarea). */
+  padding: 0.5rem;
+  margin: 1rem auto;
+  /* Ya que los inputs son elementos que trabajan en línea, se les aplica lo siguiente para que se encuentren uno debajo del otro. */
+  display: block;
+  /* Y se les da el 100% del contenedor para que se vea que ocupa el tamaño dependiendo a la resolución que se esté. */
+  width: 100%;
+}
+
+/* Todos los Inputs y Textarea que estén dentro del Contact-Form, se les aplicará un mismo formato de letra para que se vean igual. */
+.contact-form input,
+.contact-form textarea {
+  font-size: 0.85rem;
+  font-family: var(--font);
+}
+
+/* Solo a los inputs, para que queden con la línea de abajo. */
+.contact-form input {
+  /* Primero se quitan todos los bordes. */
+  border: 0;
+  /* Se coloca solo el borde de abajo. */
+  border-bottom: thin solid var(--gray-dark-color);
+  /* Se usa para que el texto del Placeholder inicie desde donde inica la línea. */
+  padding-left: 0;
+}
+
+.contact-form textarea {
+  /* Para dejar las líneas del Textarea del mismo color y tamaño que la de las Inputs. */
+  border: thin solid var(--gray-dark-color);
+  /* Para desaparecer el triángulo que modifica el tamaño de la caja de Textarea. */
+  resize: none;
+}
+
+/* Para el btn del Formulario, donde se especifica el tipo de input, a diferencia de los otros que de alguna manera se generalizan. */
+.contact-form input[type="submit"] {
+  /* Para que guarde la misma relación con los otros elementos, inputs y textarea. */
+  margin-top: 0;
+  /* Para que aparezca la manita. */
+  cursor: pointer;
+  transition: all 0.5s ease-in-out;
+}
+
+/* Para que se vea la opacidad con animación al momento de pasar el cursor por encima. */
+.contact-form input[type="submit"]:hover {
+  opacity: 0.75;
+}
+
+/* Para todos los elementos que se encuentren en Placeholder, que en este caso sería solo el texto que aparecerá por default. */
+.contact-form *::placeholder {
+  color: var(--gray-dark-color);
+}
+
+/* Para la parte de Agradecimento de los comentarios, cuando la ventana Modal sea activada. */
+/* Esta ventana Modal se mantendrá cierto tiempo y desaparecerá automáticamente con JS. */
+.contact-form-response {
+  padding: 1rem;
+  width: 400px;
+  text-align: center;
+  background-color: var(--white-color);
+}
+
+.contact-form-response svg {
+  /* Para alejar la carita del texto. */
+  margin-top: 2rem;
+  /* Para darle tamaño a la carita. */
+  width: 4rem;
+  height: 4rem;
+  /* Color de la carita por ser SVG. */
+  fill: var(--first-color);
+}
+
+/* Para activar la ventana MODAL. */
+/* El elemento que tenga la clase Modal y que tenga el ID Gracias, cuando sea Target de la página, aplica lo siguiente. */
+.modal#gracias:target {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media screen and (min-width: 1024px) {
+  .contact-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* Se genera un espacio entre las columnas para que no se vea todo junto. */
+    column-gap: 1rem;
+  }
+
+  /* Se modifica formato de letra. */
+  .contact-form input,
+  .contact-form textarea {
+    font-size: 1rem;
+  }
+
+  /* Para que el Textarea y Loader desplacen a dos columnas. */
+  .contact-form textarea,
+  .contact-form-loader {
+    grid-column: span 2;
+  }
+
+  /* Para colocar el botón de Enviar a la izquierda. */
+  .contact-form input[type="submit"] {
+    margin-left: 0;
+  }
+}
+
+/********** HeroImage **********/
+.hero-image {
+  /* Esta variable se creó en el documento HTML, se encuentra en la sección de Inicio (Home) en la etiqueta Article con el atributo Style. */
+  background-image: var(--hero-image);
+  /* Para que la imagen no se repita. */
+  background-repeat: no-repeat;
+  /* La imagen se adaptará de manera proporcional a la altura del contenedor. */
+  background-size: cover;
+  /* Para que esté centrado tanto en X como en Y. */
+  background-position: center;
+  /* La imagen se mantiene fija y no se scrollea, dando un efecto de Parallax. */
+  /* Dado que podemos llegar a tener la ncecesidad de que esta propiedad se modifique para otras imágenes, esta propiedad se colocará en el Style de Article como en background-image. */
+  background-attachment: var(--attachment);
+}
+
+.hero-image-opacity {
+  /* Una de las características de las heroImage es que vayan al tamaño de la pantalla, por lo que se usan las siguientes dos propiedades. */
+  width: 100%;
+  min-height: 100vh;
+  /* Se aplica un centrado perfecto con FlexBox. */
+  display: flex;
+  /* Con estas propiedad se logra el centrado perfecto con el elemtno hijo. Que en este caso es el btn Contáctame. */
+  justify-content: center;
+  align-items: center;
+  /* Alineaci´'on del texto centrado. */
+  text-align: center;
+  /* De esta manera, hacemos que nuestra HeroImage se vea opacada. */
+  background-color: var(--hero-opacity-color);
+}
+
+.hero-image-title {
+  /* Al generar tamaños de letra pensados en el Viewport, nos evitamos de estar generando @mediaquerys para ir agrandando o disminuyendo el tamño de la letra. */
+  font-size: 7.5vw;
+  color: var(--hero-text-color);
+}
+
+/********** Para MENU Móvil **********/
+.menu-btn {
+  outline: thin solid var(--first-color);
+  border: 0;
+  cursor: pointer;
+  background-color: var(--second-color);
+}
+
+/* Para darle color a los SVGs, se usa una propiedad llamada Fill (relleno). */
+.menu-btn svg {
+  fill: var(--first-color);
+}
+
+.menu {
+  /* Este comentario se deja porque previamente se utilizó la propiedad display None para ocultar el botón hamburguesa y por trabajar. */
+  /* display: none; */
+  position: fixed;
+  left: 0;
+  bottom: var(--header-height);
+  width: 100%;
+  /* Se aplican flex y así flex-column, par acomodar los elementos del menú. Ocasionando que los enlaces se acomoden un detrás del otro. */
+  display: flex;
+  flex-direction: column;
+  background-color: var(--second-color);
+  /* Estas dos propiedades consecutivas son para cuando se accione el menú, no aparezca de golpe y haya una ligera transición. */
+  opacity: 0;
+  /* Nos dice si activamos o no la reacción a interactividad del elemento HTML en cuestión. */
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+/* Para cuando el menú se active. Regresamos estas propiedades a sus valores originales para que se puedan visualizar. */
+.menu.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Para los enlaces de navegación. */
+.menu a {
+  padding: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  color: var(--first-color);
+}
+
+.menu a:hover {
+  color: var(--white-color);
+  background-color: var(--first-color);
+}
+
+/********** Media Query **********/
+/* MediaQuery para los distintos formattos y que de iguak manera se pueda usar en otros proyectos. */
+@media screen and (min-width: 1024px) {
+  .menu-btn {
+    /* En este formato el btn de menú ya no lo necesitamos por lo que aplicamos lo siguiente. */
+    display: none;
+  }
+
+  .menu {
+    /* Para que el menú se quede fijo. Y a su vez regresando a su valores originales, en este caso para un formato de escritorio. */
+    position: static;
+    width: auto;
+    /* Con esto los elementos del menú (enlaces) se alinena en una fila. */
+    flex-direction: row;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Modificamos los enlaces del menú. */
+  .menu a {
+    /* Con esto se ajustan los enlaces al espacio del Header, con 0 se ajusta al espacio del Header y con 1 remse genera espacio entre los enlaces. */
+    padding: 0 1rem;
+  }
+
+  /* Esta parte de código es solo pára ajustar al enlace de Contacto, que tenga el mismo espaciado que el logo MichVC. */
+  .menu a:last-child {
+    padding-right: 0;
+  }
+
+  /* Para quitar el color de fondo en el estado Hoover. */
+  .menu a:hover {
+    background-color: transparent;
+  }
+}
+
+/********** VENTANA MODAL  **********/
+.modal {
+  position: fixed;
+  z-index: 999;
+  /* Con estos márgenes se obliga a estirar la ventana y que ocupe prácticamente toda la pantalla. */
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  /* Con las siguientes tres propiedades de abajo, hacemos que la ventana se centre. */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--black-alpha-color);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 1s;
+}
+
+.modal-content {
+  position: relative;
+}
+
+/* Para posicionar el tachecito de la ventana. */
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+/* Para modificar el tachecito. */
+.modal-close svg {
+  width: 3rem;
+  height: 3rem;
+  fill: var(--first-color);
+}
+
+/* Para que se abra el contenido modal. */
+/* Con la seudoclase Target, los estilos se van aplicar cuando el Target se encuentre dentro del ID interno. */
+/* Los corchetes '[ ]' son el selector de atributos, para cuando tenemos un atributo de HTML con cierto valor. Por lo tanto: */
+/* Cuando tengo un elemento, en este caso con la clase moda, y que aparte en su ID tenga el valor, en este caso de Trabajo-1, y a parte esté en el Target de la página, activa estos estilos. Pero para que funcione con todas las ventanas, se usa ' | ' y solo se escribe la palabra 'trabajo', de tal manera que al buscar está palabra en la clase Modal, se activaron los estilos. */
+.modal[id|="trabajo"]:target {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/********** Progress Bar **********/
+/* WEBKIT es para CHROME. */
+/* MOZ es para FIREFOX. */
+progress {
+  width: 100%;
+  height: 1rem;
+  background-color: var(--gray-color);
+}
+
+progress::-webkit-progress-bar {
+  background-color: var(--gray-color);
+}
+
+progress::-webkit-progress-value {
+  background-color: var(--gray-dark-color);
+}
+
+progress::-moz-progress-value {
+  background-color: var(--gray-dark-color);
+}
+
+.progress {
+  margin: 1rem auto;
+}
+
+.progress > p {
+  margin: 0;
+  display: flex;
+  /* Para que el espacio que sobra lo reparta entre los elementos. */
+  justify-content: space-between;
+  font-size: 0.85rem;
+}
+
+/******************** SECCIÓN - UTILITIES ********************/
+
+.avatar {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+}
+
+/* Para la sección de SERVICES */
+.bg-gray-light {
+  background-color: var(--gray-light-color);
+}
+
+/* Código que se puede mover fácilmente de un proyecto a otro. */
+.box-shadow-1 {
+  box-shadow: 0.25rem 0.25rem 1rem rgba(0, 0, 0, 0.25);
+}
+
+/* Configuración para el btn de Contáctame. */
+.btn {
+  border-radius: 0.5rem;
+  padding: 1rem;
+  /* Los enlaces trabajan en línea, pero en este caso, necesitamos que nuestro enlace tenga caracterpisticas de línea y de bloque para que tenga cuerpo y pueda aplicarle paddings laterales */
+  display: inline-block;
+  width: 200px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  color: var(--white-color);
+  background-color: var(--first-color);
+}
+
+/* Empezamos a maquetar para HEADER */
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  /* Es la máxima anchura del sitio. Al menos la que se está colocando, pero se puede modificar. */
+  /* Si necesito cambiar la máxima anchura, puedo hacer una variable que iría en Root. que controle esta propiedad para cuando se requiera cambiar, haga un cambio en cascada donde sea que se haya usado la propiedad. */
+  max-width: var(--max-width);
+}
+
+.gray-scale {
+  filter: grayscale(1);
+}
+
+/* Esta clase es la del tachecito del botón para el menú hamburguesa. */
+.none {
+  display: none;
+}
+
+.section {
+  /* Esto es para dar espacio entre el contenido de las secciones y el pesacio de la página web.. */
+  padding: 2rem 1rem;
+}
+
+/* Para el título de la sección Servicios ¿Qué te ofrezco? */
+.section-title {
+  border-top: thin solid var(--first-color);
+  border-bottom: thin solid var(--first-color);
+  /* Arriba y abajo 2rem y auto a los lados para que se centre. */
+  margin: 2rem auto;
+  /* Espacio entre los bordes y el texto. */
+  padding: 0.5rem 1rem;
+  /* Tamaño que ocupará la parte del título. */
+  width: 250px;
+  /* Centrar el texto */
+  text-align: center;
+  color: var(--title-color);
+}
+
+.text-first-color {
+  color: var(--first-color);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* Para cuando se tenga que cambiar la alineación del texto se hace una media query. */
+@media screen and (min-width: 1024px) {
+  .full-lg-sceen {
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  .text-lg-center {
+    text-align: center;
+  }
+
+  .text-lg-left {
+    text-align: left;
+  }
+
+  .text-lg-right {
+    text-align: right;
+  }
+}
+
+/* Las secciones anteriores se pueden mover a otro proyecto y modificar según corresponda,la sección de abajo es la que usalmente se queda en el proyecto. */
+
+/******************** SECCIÓN - SITE STYLES ********************/
+/* Es el código que será meramente propio del proyecto y que será difícl de reutilizar en otro proyecto. */
+
+.about > article {
+  margin-bottom: 2rem;
+}
+
+.contact-card {
+  margin: 1rem auto;
+  padding: 1rem;
+  width: 100%;
+  /* Esta altura es porque el diseñador así la planteó. */
+  height: 144px;
+  /* Para alinear todos los elementos que están dentro de la tarjeta. */
+  display: flex;
+  flex-direction: column;
+  /* El espacio sobrante lo reparte considerando las orillas */
+  justify-content: space-around;
+  align-items: center;
+}
+
+/* Para poner el ícono del Gatito color rosa, en la sección de Contacto. */
+.contact-card > svg {
+  fill: var(--first-color);
+  /* Para colocarlo del mismo tamaño que los otros íconos. */
+  width: 2rem;
+  height: 2rem;
+}
+
+/* Esto es para que el texto en la etiqueta Small, quede más cerca de cada Título de la sección de Contacto. */
+.contact-card > small {
+  margin-top: -1rem;
+}
+
+/* Para el Pie de Página (Footer) */
+.footer {
+  /* Para que se pueda visualizar el Footer, se le tiene que dar un margin-bottom del mismo tamaño que el de la cabecera, en este caso, para que s epueda visualizar en la versión móvil. */
+  margin-bottom: var(--header-height);
+  padding: 0.5rem;
+  text-align: center;
+  color: var(--white-color);
+  background-color: var(--third-color);
+}
+
+/* Empezamos a dar estilos a la CABECERA (header) */
+.header {
+  /* Dado que la cabecera está alineada en la parte de abajo, se configura de la siguiente manera. */
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  /* Para evitar que cualquier otro contenido se vea sobre ella y siempre sea lo último que se vea. */
+  z-index: 999;
+  padding: 1rem;
+  /* Como es un elemento posicionado de manera fija, pierde las propiedades de ancho y alto. Este ancho es tomado referente al Body. */
+  width: 100%;
+  /* Se define una altura muy particular y al igual que en max-width, se declara una variable para futuras modificaciones. */
+  height: var(--header-height);
+  background-color: var(--second-color);
+}
+
+/* El Contenedor que es el hijo directo del Header, por lo cual se usa el mayor que '>'. */
+.header > .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo a {
+  color: var(--first-color);
+  font-weight: bold;
+  font-size: 2rem;
+  text-decoration: none;
+}
+
+.portfolio-card {
+  /* Se le da un Relative a la tarjeta porque después en el Hover se le dará un Absolute para que la información que se coloque se posicione respecto de su elemento contenedor. */
+  position: relative;
+  width: 100%;
+  /* Se le quitan los márgenes para que las imágenes estén unas detrás de las otras. */
+  margin: 0 auto;
+  /* Se necesita para que los enlaces trabajen en bloque y estén uno debajo del otro. */
+  display: block;
+}
+
+.portfolio-card img {
+  width: 100%;
+  height: 100%;
+  /* Con este se soluciona que se pierda el aspecto y proporción de la imagen. */
+  object-fit: cover;
+}
+
+.portfolio-card-info {
+  /* Para posicionar el texto dentro del contenedor. */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  background-color: var(--first-alpha-color);
+  color: var(--white-color);
+  /* Hacemos que la info desaparezca. */
+  opacity: 0;
+  /* Desactivamos cualquier evento con el mouse, esto se activará cuando se emplee el Hover. */
+  pointer-events: none;
+  /* Para que la info no aparezca de manera súbita. */
+  transition: all 0.5s ease-in-out;
+}
+
+/* Para que aparezca la información. */
+.portfolio-card:hover .portfolio-card-info {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.portfolio-card-info > div {
+  padding: 1rem;
+  border: thin solid var(--white-color);
+  width: 100%;
+  height: 100%;
+}
+
+/* Para la parte de MODAL */
+.portfolio-modal {
+  padding: 1rem;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--white-color);
+}
+
+.portfolio-modal h3 {
+  border-bottom: medium solid var(--first-color);
+  margin: 1rem auto;
+  padding: 0.5rem 0;
+  color: var(--title-color);
+}
+
+.portfolio-details {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  /* Es para el tamaño de las filas que se generarn de manera implícita. */
+  grid-auto-rows: 2rem;
+}
+
+.portfolio-details b {
+  color: var(--first-color);
+}
+
+/* Para los apartados de Servicios, las Service-Card. */
+.service-card {
+  /* Arriba y abajo 1rem y auto a los lados para que se centre. */
+  margin: 1rem auto;
+  /* Espaciado a los 4 lados de 1rem. */
+  padding: 1rem;
+  /* Centrar el contenido. */
+  text-align: center;
+}
+
+/* Para los títulos de Service-Card. */
+.service-card h3 {
+  color: var(--title-color);
+}
+
+/* Para los SVGs dentro los Service-Card. */
+.service-card svg {
+  /* Para que se separe ligeramente el SVG del texto. */
+  margin-bottom: 1.25rem;
+  /* Esto es para darle color a un SVG. */
+  fill: var(--first-color);
+}
+
+.social-media a {
+  /* Con esto quitamos el underline (subrayado) predeterminado de los enlaces. */
+  text-decoration: none;
+}
+
+.social-media svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* MEDIAQUERY PARA MÓVIL Y TABLET (728xp), Y ESCRITORIO (1024px) */
+/* MÓVIL Y TABLET */
+@media screen and (min-width: 768px) {
+  .contact-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 48%);
+    justify-content: space-between;
+  }
+
+  /* Para acomodar las imágenes. */
+  .portfolio > .container {
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+  }
+
+  .portfolio .section-title {
+    /* Con esto. el título ocupa dos espacios en la columna. */
+    grid-column: span 2;
+  }
+
+  /* Se centra la info. */
+  .portfolio-info {
+    margin: 1rem;
+    align-items: center;
+  }
+
+  /* Para la parte de Modal */
+  .portfolio-modal {
+    flex-direction: row;
+    max-width: 800px;
+  }
+
+  /* El Container de la sección de Servicios es la que aplicará el Grid para que en esta resolución se puedan ver las service-card a 2 columnas. */
+  .services > .container {
+    /* Para acomodar las imágenes. */
+    display: grid;
+    /* 45% porque siendo 2 columnas suman 90% y el 10% restante se dará para colocar un espaciado con space-between. */
+    grid-template-columns: repeat(2, 45%);
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Dentro de Services se tiene un elemento llamado Section-Title, a este elemento se le dice que en su propiedad Grid-Column se desplace dos celdas con Span. */
+  .services .section-title {
+    /* Con esto. el título ocupa dos espacios en la columna. */
+    grid-column: span 2;
+  }
+}
+
+/* ESCRITORIO */
+@media screen and (min-width: 1024px) {
+  .about {
+    /* Recordar que el Grid por defecto, el flujo es en filas y cuando no se especifican las filas, éstas se generan implícitamente. */
+    display: grid;
+    /* Dada la explicación de Grid de arriba, aquí lo importante era definir la columnas. */
+    grid-template-columns: repeat(3, 30%);
+    justify-content: space-between;
+    align-content: center;
+  }
+
+  .contact-cards {
+    grid-template-columns: repeat(4, 24%);
+  }
+
+  .footer {
+    /* Aquí se modifica este margin para que en la versión de Escritorio el Footer se vea hasta abajo de la página y no le afecte el mar´gin que se modifico para el Footer en la parte de Styles, que hace función para la versión Móvil y Tablet. */
+    margin-bottom: 0;
+  }
+
+  .header {
+    /* Es una mezcla entre el posicionamiento relativo y el fijo con la diferencia de que se comporta como fijo cuando llega a la altura que se le defina. En este caso, nos ayuda para que el Header no tape los elementos que se encuentren arriba de la página, sino que los deplaza. */
+    position: sticky;
+    top: 0;
+    padding: 0.5rem;
+    /* No ayuda a tener un espacio proporcional de los elementos en el Header usando la función Calc. */
+    height: calc(var(--header-height) - 0.5rem);
+  }
+
+  /* Para acomodar las imágenes. */
+  .portfolio > .container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .portfolio .section-title {
+    grid-column: span 3;
+  }
+
+  /* Para acomodar las imágenes. */
+  .services > .container {
+    /* 30% porque siendo 3 columnas suman 90% y el 10% restante se dará para colocar un espaciado con space-between. */
+    grid-template-columns: repeat(3, 30%);
+  }
+
+  .services .section-title {
+    grid-column: span 3;
+  }
+}
