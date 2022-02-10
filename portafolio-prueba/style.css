@@ -908,7 +908,7 @@ progress::-moz-progress-value {
 }
 
 /* PARA CELULAR, esta parte es extra al curso, experimentando a ver si queda. que al parecer si quedó. */
-@media screen and (min-width: 360px) {
+@media screen and (min-width: 360px) and (max-width: 640px) {
   .contact-cards {
     display: grid;
     grid-template-columns: repeat(2, 48%);
