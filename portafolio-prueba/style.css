@@ -906,3 +906,35 @@ progress::-moz-progress-value {
     grid-column: span 3;
   }
 }
+
+/* PARA CELULAR, esta parte es extra al curso, experimentando a ver si queda. que al parecer si quedó. */
+@media screen and (min-width: 480px) {
+  .contact-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 48%);
+    justify-content: space-between;
+  }
+
+  /* Para acomodar las imágenes. */
+  .portfolio > .container {
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+  }
+
+  .portfolio .section-title {
+    /* Con esto. el título ocupa dos espacios en la columna. */
+    grid-column: span 2;
+  }
+
+  /* Se centra la info. */
+  .portfolio-info {
+    margin: 1rem;
+    align-items: center;
+  }
+
+  /* Para la parte de Modal */
+  .portfolio-modal {
+    flex-direction: row;
+    max-width: 800px;
+  }
+}
